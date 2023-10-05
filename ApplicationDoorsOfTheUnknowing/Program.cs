@@ -13,11 +13,13 @@ namespace ApplicationDoorsOfTheUnknowing
 
     class Program
     {
-        // Class Player Object is defined here
-        public static PlayerClass currentPlayer = new PlayerClass();
+        public static PlayerClass currentPlayer = new();
 
-        // Enemy Orc is defined here
-        public static EnemyOrc orc = new EnemyOrc();
+        public static EnemyOrc orc = new();
+
+        public static JackRabbitClass jackRabbit = new();
+
+        const string cosmicDweller = "Celestial Being";
 
         static void Main(string[] args)
         {
@@ -25,16 +27,13 @@ namespace ApplicationDoorsOfTheUnknowing
             Console.WriteLine("| Doors Of The Unknowing |");
             Console.WriteLine("..........................");
 
-            Start();
-            theChallengeAhead();
-            doorsOfUnknowing(); // Challenge for the user
+            GameStart();
+            TheChallengeAhead();
+            DoorsOfUnknowing(Doors, JackRabbitChallenge); // Challenge for the user
         }
-
-        // A constant variable that will never change
-        const string cosmicDweller = "Celestial Being";
-        // Greeting to the user
-        public static void Start()
+        public static void GameStart()
         {
+            // Display the introduction messages
             Console.WriteLine("----------------------------------------------------------------------------------");
             Console.WriteLine("| You have been teleported to a strange cosmic realm.                            ");
             Console.WriteLine("| You are greeted by a Celestial Being, its Aura frightens you but you trust it. ");
@@ -43,78 +42,56 @@ namespace ApplicationDoorsOfTheUnknowing
             Console.WriteLine(" [Please enter your name:] ");
             Console.Write("> ");
 
-            currentPlayer.name = Console.ReadLine();
-            // Checks to see if name is valid
-            // Just pressing Enter Key is not a valid name
+            // Get the player's name, ensuring it's valid
+            currentPlayer.name = GetValidName();
+
+            // If the player didn't provide a valid name, assign a default name
             if (currentPlayer.name == "")
             {
-                Console.WriteLine("[Please enter a valid name]");
-                Console.Write("> ");
-                currentPlayer.name = Console.ReadLine();
-
-                if (currentPlayer.name == "" || nameChecker(currentPlayer.name))
-                {
-                    Console.Clear();
-                    Console.WriteLine("----------------------------");
-                    Console.WriteLine("| You are unworthy of a name");
-                    Console.WriteLine("----------------------------");
-                    currentPlayer.name = "Nameless Earth being";
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("***************************************************************");
-                    Console.WriteLine($"{currentPlayer.name} ?");
-                    Console.WriteLine($"Ahhh {currentPlayer.name} the protector of the Earth Realm");
-                    Console.WriteLine("***************************************************************");
-                }
-
-
-            }
-            // The nameChecker Method elimantes the user from using integers as a name
-            else if (nameChecker(currentPlayer.name))
-            {
-                Console.WriteLine("Please enter a valid name containing letters only.");
-                Console.Write("> ");
-                currentPlayer.name = Console.ReadLine();
-
-                if (nameChecker(currentPlayer.name) || currentPlayer.name == "")
-                {
-                    Console.Clear();
-                    Console.WriteLine("You are unworthy of a name");
-                    currentPlayer.name = "Nameless Earth being";
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine($"{currentPlayer.name} ?");
-                    Console.WriteLine($"Ahhh {currentPlayer.name} the protector of the Earth Realm");
-                }
+                Console.Clear();
+                Console.WriteLine("----------------------------");
+                Console.WriteLine("| You are unworthy of a name");
+                Console.WriteLine("----------------------------");
+                currentPlayer.name = "Nameless Earth being";
             }
             else
             {
+                // Display a welcome message with the player's name
                 Console.Clear();
+                Console.WriteLine("***************************************************************");
                 Console.WriteLine($"{currentPlayer.name} ?");
                 Console.WriteLine($"Ahhh {currentPlayer.name} the protector of the Earth Realm");
+                Console.WriteLine("***************************************************************");
             }
         }
-        // This checks if user Inputs a valid name
-        // We use regular expression here
-        public static bool nameChecker(string s)
-        {
-            // Regex class allows us to work with regular expressions
-            MatchCollection match = Regex.Matches(s, "[0-9]|\\!|\\@|\\#|\\$|\\^|\\%|\\&|\\*|\\(|\\)|\\?");
 
-            foreach (Match m in match)
+        // Get a valid name from the player
+        public static string GetValidName()
+        {
+            string playerName = Console.ReadLine();
+
+            // Keep asking for a valid name until one is provided
+            while (string.IsNullOrWhiteSpace(playerName) || !IsNameValid(playerName))
             {
-                return true;
+                Console.WriteLine("[Please enter a valid name]");
+                Console.Write("> ");
+                playerName = Console.ReadLine();
             }
-            return false;
+
+            return playerName;
+        }
+
+        // Check if a name is valid (contains no invalid characters)
+        public static bool IsNameValid(string name)
+        {
+            // Use regular expressions to check for invalid characters
+            return !Regex.IsMatch(name, "[0-9]|\\!|\\@|\\#|\\$|\\^|\\%|\\&|\\*|\\(|\\)|\\?");
         }
         // Explains the plot of the game.
-        // Gives the user a choice of actually playing the game or end it immediately.
-        public static void theChallengeAhead()
+        // Gives the user a choice of actually playing the game or ending it immediately.
+        public static void TheChallengeAhead()
         {
+            // Display the introduction messages
             Console.WriteLine("-----------------------------------------------------------------------------------");
             Console.WriteLine($"| {cosmicDweller}: I have summoned you here today as the champion of your realm. ");
             Console.WriteLine($"| {currentPlayer.name}, you have a great challenge ahead of you.                ");
@@ -122,10 +99,11 @@ namespace ApplicationDoorsOfTheUnknowing
             Console.WriteLine("-----------------------------------------------------------------------------------");
             Console.WriteLine("[Please type: (Yes) to continue or (No) to be transported back to Earth]");
             Console.Write("> ");
-            var choice = Console.ReadLine();
 
-            // .ToLower eliminates case sensitivity
-            if (choice.ToLower() == "yes")
+            // Get the player's choice and make it lowercase to eliminate case sensitivity
+            var choice = Console.ReadLine().ToLower();
+
+            if (choice == "yes")
             {
                 Console.Clear();
                 Console.WriteLine("**************************************************************");
@@ -134,52 +112,151 @@ namespace ApplicationDoorsOfTheUnknowing
             }
             else
             {
+                // Display a farewell message and exit the program
                 Console.Clear();
                 Console.WriteLine("--------------------------------------------------------------------------------------------");
                 Console.WriteLine($"| Goodbye {currentPlayer.name}.                                                            ");
                 Console.WriteLine("| You have been transported back to Earth. Another champion has been chosen in your place.  ");
                 Console.WriteLine("--------------------------------------------------------------------------------------------");
-                // Eliminates the porgram and exits.
-                System.Environment.Exit(0);
+                System.Environment.Exit(0); // Exit the program
             }
 
-            // Explanation of the game if user chooses yes.
+            // Provide an explanation of the game if the user chooses "yes."
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine($"|{cosmicDweller}: You are in the cosmic realm of the unknowing.                                                 ");
-            Console.WriteLine("| Earth is in grave danger of being destroyed.You will have a series of three doors in front of you.               ");
+            Console.WriteLine("| Earth is in grave danger of being destroyed. You will have a series of three doors in front of you.          ");
             Console.WriteLine("| Each door will have a challenge behind it.                                                                       ");
             Console.WriteLine("| The challenge difficulty varies, thus, meaning it is left to chance as to what you will face behind these doors. ");
             Console.WriteLine("| You need to complete each challenge successfully in order to save Earth                                          ");
-            Console.WriteLine($"| God speed {currentPlayer.name}                                                                                  ");
+            Console.WriteLine($"| Godspeed {currentPlayer.name}                                                                                 ");
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------------");
         }
-
-
-        // Three doors with tasks of random probability behind it.
-        public static void doorsOfUnknowing()
+        public static void Doors()
         {
-            Console.WriteLine("***************************************");
-            Console.WriteLine("| Please choose one of the three doors.");
-            Console.WriteLine("***************************************");
-            for (int i = 0; i < 8; i++) // Controls Height Of Door
+            for (int i = 0; i < 8; i++)
             {
-                for (var j = 6; j >= 0; j--) // Controls Width Of Door
+                for (var j = 6; j >= 0; j--)
                 {
                     Console.Write("|" + " ");
                 }
                 Console.Write("               ");
-                for (var j = 6; j >= 0; j--) // Controls Width Of Door
+                for (var j = 6; j >= 0; j--)
                 {
                     Console.Write("|" + " ");
                 }
                 Console.Write("               ");
-
-                for (var j = 6; j >= 0; j--) // Controls Width Of Door
+                for (var j = 6; j >= 0; j--)
                 {
                     Console.Write("|" + " ");
                 }
                 Console.WriteLine("");
             }
+        }
+
+        public static void JackRabbitChallenge()
+        {
+            jackRabbit.Explanation(currentPlayer);
+
+            Random random = new Random();
+            var playerScore = 0;
+            var jackRabbitScore = 0;
+
+            const int scoreThreshold = 3;
+
+            while (playerScore < scoreThreshold && jackRabbitScore < scoreThreshold)
+            {
+                Console.WriteLine("==========================================");
+                Console.WriteLine($"| Your score = {playerScore} : Jack Rabbit score = {jackRabbitScore} |");
+                Console.WriteLine("==========================================");
+                Console.WriteLine("[Please enter 'T' for (Tails) or 'H' for (Heads)]");
+                Console.Write("> ");
+                var playerChoice = Console.ReadLine();
+                int coinFlip = random.Next(0, 2);
+
+                if ((playerChoice.ToLower() == "h" && coinFlip == 0) || (playerChoice.ToLower() == "t" && coinFlip == 1))
+                {
+                    Console.WriteLine("-----------------------------------");
+                    Console.WriteLine("| Jack Rabbit has flipped the coin.");
+                    Console.WriteLine("| You guessed correctly !");
+                    Console.WriteLine("------------------------------------");
+                    playerScore++;
+                }
+                else
+                {
+                    Console.WriteLine("---------------------------");
+                    Console.WriteLine("| You guessed incorrectly.");
+                    Console.WriteLine("---------------------------");
+                    jackRabbitScore++;
+                }
+            }
+
+            if (jackRabbitScore == scoreThreshold)
+            {
+                Console.Clear();
+                Console.WriteLine("\n*********************************************");
+                Console.WriteLine("             YOU HAVE LOST!                   ");
+                Console.WriteLine("***********************************************");
+                Console.WriteLine("\n---------------------------------------------------------");
+                Console.WriteLine($"| I see luck is not on your side, {currentPlayer.name}.");
+                Console.WriteLine("| Let me ask you this.");
+                Console.WriteLine($"| How far can a Jack Rabbit jump {currentPlayer.name}? ");
+                Console.WriteLine("---------------------------------------------------------");
+
+                string answerToJump;
+                do
+                {
+                    Console.WriteLine("[Please type 'jackrabbit' to answer]");
+                    Console.Write("> ");
+                    answerToJump = Console.ReadLine();
+
+                    if (currentPlayer.name == "")
+                    {
+                        Console.WriteLine("--------------------------------------------------");
+                        Console.WriteLine("| Hmmm, I guess you caught onto my trick question. ");
+                        Console.WriteLine("| You may pass.");
+                        Console.WriteLine("--------------------------------------------------");
+                    }
+                    else if (answerToJump.Equals("jackrabbit", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine("----------------------------------");
+                        Console.WriteLine("| You are correct, you may pass!");
+                        Console.WriteLine("----------------------------------");
+                    }
+                    else
+                    {
+                        Console.WriteLine("----------------------------------------");
+                        Console.WriteLine("| That's not correct, try again.");
+                        Console.WriteLine("----------------------------------------");
+                    }
+                } while (!answerToJump.Equals("jackrabbit", StringComparison.OrdinalIgnoreCase));
+            }
+
+            Console.Clear();
+            Console.WriteLine("\n*********************************************");
+            Console.WriteLine("             YOU HAVE WON!                   ");
+            Console.WriteLine("***********************************************");
+            Console.WriteLine("\n");
+            Console.WriteLine($"Congratulations {currentPlayer.name}, you have defeated the Jack Rabbit!");
+            Console.WriteLine("A large door appears before you.");
+            Console.WriteLine("\n");
+            for (int i = 20; i >= 0; i--)
+            {
+                for (int j = 15; j >= 0; j--)
+                {
+                    Console.Write("|" + " ");
+                }
+                Console.WriteLine("");
+            }
+        }
+
+
+        // Three doors with tasks of random probability behind it.
+        public static void DoorsOfUnknowing(Action doors, Action jackChal)
+        {
+            Console.WriteLine("***************************************");
+            Console.WriteLine("| Please choose one of the three doors.");
+            Console.WriteLine("***************************************");
+            doors();
             Console.Write("Door 1 = [one] | [1].      ");
             Console.Write("Door 2 = [two] | [2].      ");
             Console.Write("Door 3 = [three] | [3].");
@@ -187,98 +264,12 @@ namespace ApplicationDoorsOfTheUnknowing
             Console.Write("> ");
             var doorChoice = Console.ReadLine();
 
-            // DOOR 1
-            // Coin Flip Game
-            // Door 1, 1st Boss battle
-            if (doorChoice.ToLower() == "one" || doorChoice == 1.ToString())
+            
+            if (doorChoice.ToLower() == "one" || doorChoice == "1")
             {
                 Console.Clear();
-                JackRabbitClass jackRabbit = new JackRabbitClass();
-                // Enemies Plot and explanation of the challenge
-                jackRabbit.Explanation(currentPlayer);
-                // Declaring random variable for the coin toss
-                Random random = new Random();
-                var playerScore = 0;
-                var jackRabbitScore = 0;
-                while (playerScore != 3 && jackRabbitScore != 3)
-                {
-                    Console.WriteLine("==========================================");
-                    Console.WriteLine($"| Your score = {playerScore} : Jack Rabbit score = {jackRabbitScore} |");
-                    Console.WriteLine("==========================================");
-                    Console.WriteLine("[Please enter 'T' for (Tails) or 'H' for (Heads)]");
-                    Console.Write("> ");
-                    var playerChoice = Console.ReadLine();
-                    var coinFlip = random.Next(0, 2);
-
-                    if (playerChoice.ToLower() == "h" && coinFlip == 0)
-                    {
-                        Console.WriteLine("-----------------------------------");
-                        Console.WriteLine("| Jack Rabbit has flipped the coin.");
-                        Console.WriteLine("| You guessed correctly !");
-                        Console.WriteLine("------------------------------------");
-                        playerScore++;
-                    }
-                    else if (playerChoice.ToLower() == "t" && coinFlip == 1)
-                    {
-                        Console.WriteLine("-----------------------------");
-                        Console.WriteLine("| Jack Rabbit flips the coin.");
-                        Console.WriteLine("| You guessed correctly !");
-                        Console.WriteLine("------------------------------");
-                        playerScore++;
-                    }
-                    else
-                    {
-                        Console.WriteLine("---------------------------");
-                        Console.WriteLine("| You guessed incorrectly.");
-                        Console.WriteLine("---------------------------");
-                        jackRabbitScore++;
-                    }
-                }
-                if (jackRabbitScore == 3)
-                {
-                    Console.Clear();
-                    Console.WriteLine("\n*********************************************");
-                    Console.WriteLine("             YOU HAVE LOST!                   ");
-                    Console.WriteLine("***********************************************");
-                    Console.WriteLine("\n---------------------------------------------------------");
-                    Console.WriteLine($"| I see luck is not on your side, {currentPlayer.name}.");
-                    Console.WriteLine("| Let me ask you this.");
-                    Console.WriteLine($"| How far can a Jack Rabbit jump {currentPlayer.name}? ");
-                    Console.WriteLine("---------------------------------------------------------");
-                    Console.WriteLine("[Please type your answer below]");
-                    Console.Write("> ");
-                    var answerToJump = Console.ReadLine();
-                    if (currentPlayer.name == "")
-                    {
-                        Console.WriteLine("--------------------------------------------------");
-                        Console.WriteLine("| Hmmm, I guess you caught onto my trick question. ");
-                        Console.WriteLine("| You may pass.");
-                        Console.WriteLine("--------------------------------------------------");
-
-                    }
-                    else
-                    {
-                        Console.WriteLine("----------------------------------");
-                        Console.WriteLine("| You are correct, you may pass!");
-                        Console.WriteLine("----------------------------------");
-                    }
-                }
-                Console.Clear();
-                Console.WriteLine("\n*********************************************");
-                Console.WriteLine("             YOU HAVE WON!                   ");
-                Console.WriteLine("***********************************************");
-                Console.WriteLine("\n");
-                Console.WriteLine($"Congratualtions {currentPlayer.name} you have defeated the Jack Rabbit!");
-                Console.WriteLine("A large door appears before you.");
-                Console.WriteLine("\n");
-                for (int i = 20; i >= 0; i--) 
-                {
-                    for (var j = 15; j >= 0; j--) 
-                    {
-                        Console.Write("|" + " ");
-                    }
-                    Console.WriteLine("");
-                }
+                jackChal();
+                
                 // Door 1, 2nd Boss Battle
                 Console.WriteLine("\n");
                 Console.WriteLine("*******************************************");
