@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ApplicationDoorsOfTheUnknowing
 {
-        public class EnemyOrc
+        public class Orc
         {
             public string name = "Orc";
-            public int enemyHealth = 10;
+            public int health = 10;
             public int enemyAttack = 3;
             public int armourValue = 1;
             public int enemyPotion = 2;

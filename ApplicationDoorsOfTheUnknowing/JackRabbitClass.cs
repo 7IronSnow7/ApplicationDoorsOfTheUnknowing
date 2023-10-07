@@ -9,7 +9,7 @@ namespace ApplicationDoorsOfTheUnknowing
 {
     public class JackRabbitClass
     {
-        public void Explanation(PlayerClass currentPlayer) 
+        public static void Explanation(PlayerClass currentPlayer) 
         {
             Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("| You open the door and a bright light blinds you, you walk through it cautiously.");
