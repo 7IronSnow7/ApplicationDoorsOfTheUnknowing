@@ -1,4 +1,5 @@
 Text-Based Game Project
+
 Welcome to the Text-Based Game project! We've created an exciting game, but as you'll notice, there's room for improvement in the codebase. We invite you to contribute by creating reusable code and cleaning up the existing code.
 
 How to Contribute
