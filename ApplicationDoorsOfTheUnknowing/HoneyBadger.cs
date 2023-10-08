@@ -8,6 +8,6 @@ namespace ApplicationDoorsOfTheUnknowing
 {
     public class HoneyBadger
     {
-        public int score = 0;
+        public int Score { get; set; }
     }
 }

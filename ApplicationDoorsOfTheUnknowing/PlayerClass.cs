@@ -11,11 +11,10 @@ namespace ApplicationDoorsOfTheUnknowing
     public class PlayerClass
     {
         //Variables of player class
-        public string name = "";
-        public int score = 0;
-        public int health = 20;
-        public int attack = 7;
-        public int armourValue = 0;
-        public int potion = 5;
+        public string? Name { get; set; }
+        public int Health { get; set; }
+        public int Attack { get; set; }
+        public int Potion { get; set; }
+        public int Score { get; set; }
     }
 }
